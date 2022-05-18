@@ -11,13 +11,10 @@ makeMessage(greetingMessage);
 
 listenInput();
 
-function makeMessage(text) {
-  process.stdout.write(text);
-}
-
 function listenInput() {
   process.stdin.on('data', function (data) {
     if (data.toString().trim() === 'exit') {
+      makeMessage(farewellMessage);
       process.exit();
     }
 
@@ -27,13 +24,13 @@ function listenInput() {
       if (error) throw error;
     });
 
-    process.on('beforeExit', (code) => {
-      console.log('Process beforeExit event with code: ', code);
-    });
-
-    process.on('exit', (code) => {
-      // console.log('Process exit event with code: ', code);
+    process.on('SIGINT', () => {
       makeMessage(farewellMessage);
+      process.exit();
     });
   });
+}
+
+function makeMessage(text) {
+  process.stdout.write(text);
 }
